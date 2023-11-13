@@ -14,7 +14,7 @@ public class UserDto {
     public static UserDto toDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        userDto.setName(user.getName());
+//        userDto.setName(user.getName());
         return userDto;
 
     }

@@ -1,15 +1,12 @@
 package com.example.springBlog.services;
 
-import com.example.springBlog.dtos.User.SignUpDto;
+import com.example.springBlog.dtos.user.SignUpDto;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.entities.enums.Role;
 import com.example.springBlog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor

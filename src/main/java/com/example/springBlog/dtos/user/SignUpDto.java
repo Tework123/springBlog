@@ -1,4 +1,4 @@
-package com.example.springBlog.dtos.User;
+package com.example.springBlog.dtos.user;
 
 import lombok.Data;
 

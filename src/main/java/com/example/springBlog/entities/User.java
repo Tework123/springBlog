@@ -7,9 +7,8 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -20,11 +19,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column()
-    @Size(min = 3, max = 30, message = "name length should 3 to 30")
-    private String name;
-
-    @Column(unique = false)
+    @Column(unique = true)
     @Size(min = 3, max = 50, message = "email length should 3 to 50")
     private String email;
 
@@ -38,7 +33,7 @@ public class User implements UserDetails {
 
     private boolean active;
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    @JoinColumn(name = "photo_id")
 //    @EqualsAndHashCode.Exclude
 //    private Photo avatar;
@@ -46,9 +41,9 @@ public class User implements UserDetails {
 //
 //    //  когда удаляем юзера, достаются все его посты, в поле постов user = null,
 ////  save метод не вызываем, потому что persist здесь это делает за нас
-//    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
-//    private List<Post> posts = new ArrayList<>();
-//
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+    //
 //    //    мне кажется, здесь это не нужно, нет смысла класть куда то объект follower
 ////    нужно юзеров класть, но не можем тогда ссылаться на userFollower в таблице Follow
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
@@ -63,12 +58,12 @@ public class User implements UserDetails {
 //    private Set<Follower> authors;
 //
 //
-//    private LocalDate dateJoined;
-//
-//    @PrePersist
-//    private void init() {
-//        dateJoined = LocalDate.now();
-//    }
+    private LocalDate dateJoined;
+
+    @PrePersist
+    private void init() {
+        dateJoined = LocalDate.now();
+    }
 //
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -114,5 +109,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return active;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", active=" + active +
+                ", roles=" + roles +
+                '}';
     }
 }

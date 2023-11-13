@@ -55,17 +55,11 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
-                                "/post",
-                                "/post/{id}",
-                                "/profile/{id}",
                                 "/error/**",
-                                "/signin",
-                                "/signup",
-                                "/authenticate",
                                 "/photos/**"
                         ).permitAll()
-//                        .requestMatchers("/admin").
-                        .anyRequest().authenticated()
+                        .requestMatchers("/admin").hasRole("USER")
+                        .anyRequest().permitAll()
 
 
                 );
