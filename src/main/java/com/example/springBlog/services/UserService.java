@@ -2,6 +2,7 @@ package com.example.springBlog.services;
 
 import com.example.springBlog.dtos.User.SignUpDto;
 import com.example.springBlog.entities.User;
+import com.example.springBlog.entities.enums.Role;
 import com.example.springBlog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,11 @@ public class UserService {
 //        }
 
         User user = new User();
-//        user.setEmail(signUpDto.getEmail());
         user.setUsername(signUpDto.getUsername());
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
-//        user.getRoles().add(Role.ROLE_USER);
+        user.getRoles().add(Role.ROLE_USER);
 
         userRepository.save(user);
         return true;

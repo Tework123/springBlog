@@ -1,4 +1,4 @@
-package com.example.springBlog.settings.security;
+package com.example.springBlog.settings.security.jwt;
 
 import java.io.Serializable;
 

@@ -1,20 +1,20 @@
 package com.example.springBlog.controllers;
 
 
-import com.example.springBlog.dtos.User.LoginDto;
 import com.example.springBlog.dtos.User.SignUpDto;
 import com.example.springBlog.dtos.UserDto;
 import com.example.springBlog.entities.User;
+import com.example.springBlog.entities.enums.Role;
 import com.example.springBlog.exceptions.ExampleExeption;
 import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.UserService;
-import com.example.springBlog.settings.security.JwtRequest;
-import com.example.springBlog.settings.security.JwtResponse;
-import com.example.springBlog.settings.security.JwtTokenUtil;
+import com.example.springBlog.settings.security.jwt.JwtRequest;
+import com.example.springBlog.settings.security.jwt.JwtResponse;
+import com.example.springBlog.settings.security.jwt.JwtTokenUtil;
 import com.example.springBlog.settings.security.JwtUserDetailsService;
 
+import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +22,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,7 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
     private JwtUserDetailsService jwtUserDetailsService;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -64,20 +63,9 @@ public class UserController {
     }
 
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                loginDto.getEmail(), loginDto.getPassword()));
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        System.out.println("login");
-//        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
-//    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
         userService.createUser(signUpDto);
-        System.out.println("registrer");
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
 
@@ -88,10 +76,22 @@ public class UserController {
         return userRepository.findAll();
     }
 
+    @RolesAllowed("USER")
     @GetMapping("/admin")
-    public ResponseEntity<?> admin() {
+    public ResponseEntity<?> admin(Authentication auth) {
+
+        System.out.println(auth.getName());
+        System.out.println(auth);
+        User user = userRepository.findByUsername(auth.getName());
+
+
         System.out.println("admin here");
         return new ResponseEntity<>("admin here", HttpStatus.OK);
+    }
+
+    @GetMapping("/error/forbidden")
+    public ResponseEntity<?> forbidden() {
+        return new ResponseEntity<>("sorry forbidden", HttpStatus.FORBIDDEN);
     }
 
 

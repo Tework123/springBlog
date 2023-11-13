@@ -1,6 +1,7 @@
-package com.example.springBlog.settings.security;
+package com.example.springBlog.settings.security.jwt;
 
 
+import com.example.springBlog.settings.security.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

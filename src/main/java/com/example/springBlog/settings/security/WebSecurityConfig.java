@@ -1,29 +1,30 @@
 package com.example.springBlog.settings.security;
 
 
+import com.example.springBlog.entities.enums.Role;
+import com.example.springBlog.settings.security.jwt.JwtAuthenticationEntryPoint;
+import com.example.springBlog.settings.security.jwt.JwtRequestFilter;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(jsr250Enabled = true)
 public class WebSecurityConfig {
 
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -34,9 +35,6 @@ public class WebSecurityConfig {
 
 
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -44,12 +42,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -72,34 +64,17 @@ public class WebSecurityConfig {
                                 "/authenticate",
                                 "/photos/**"
                         ).permitAll()
+//                        .requestMatchers("/admin").
                         .anyRequest().authenticated()
 
 
                 );
         http.exceptionHandling((exception) -> exception
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedPage("/error/accedd-denied"));
+                .accessDeniedPage("/error/forbidden"));
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-//                .rememberMe((remember) -> remember
-//                                .alwaysRemember(true)
-//                                .tokenValiditySeconds(60 * 60 * 24 * 365)
-//                                .key("mySecret")
-//                ).formLogin((form) -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/post", true)
-//                        .permitAll()
-//                )
-//                .logout((logout) -> logout.permitAll());
         return http.build();
     }
-
-
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(customUserDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//    }
-
-
 }
