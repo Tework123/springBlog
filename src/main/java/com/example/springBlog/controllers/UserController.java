@@ -8,16 +8,26 @@ import com.example.springBlog.entities.User;
 import com.example.springBlog.exceptions.ExampleExeption;
 import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.UserService;
+import com.example.springBlog.settings.security.JwtRequest;
+import com.example.springBlog.settings.security.JwtResponse;
+import com.example.springBlog.settings.security.JwtTokenUtil;
+import com.example.springBlog.settings.security.JwtUserDetailsService;
+
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -27,57 +37,61 @@ public class UserController {
     private final UserService userService;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+    private JwtTokenUtil jwtTokenUtil;
+    private JwtUserDetailsService jwtUserDetailsService;
 
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-    @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getEmail(), loginDto.getPassword()));
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+        final UserDetails userDetails = jwtUserDetailsService
+                .loadUserByUsername(authenticationRequest.getUsername());
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponse(token));
     }
+
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+    }
+
+
+//    @PostMapping("/signin")
+//    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                loginDto.getEmail(), loginDto.getPassword()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        System.out.println("login");
+//        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+//    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
-
-        // add check for email exists in DB
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
-            return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
-        }
-
-        // create user object
-        User user = new User();
-        user.setEmail(signUpDto.getEmail());
-        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-
-//        Role roles = roleRepository.findByName("ROLE_ADMIN").get();
-//        user.setRoles(Collections.singleton(roles));
-
-        userRepository.save(user);
-
+        userService.createUser(signUpDto);
+        System.out.println("registrer");
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
 
 
-    @PostMapping("/registration")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        System.out.println(user);
-        userService.createUser(user);
-        return ResponseEntity.ok("Save user ok");
-    }
-
-
-    @GetMapping("")
-    public ResponseEntity getUsers() {
+    @GetMapping("/user")
+    public List<User> getUsers() {
         System.out.println(userRepository.findAll());
-        return ResponseEntity.ok("Cerver worked norm");
+        return userRepository.findAll();
     }
 
-    @PostMapping("")
-    public ResponseEntity registration(@RequestBody User user) {
-//        userService.registration(user);
-        return ResponseEntity.ok("Save user ok");
+    @GetMapping("/admin")
+    public ResponseEntity<?> admin() {
+        System.out.println("admin here");
+        return new ResponseEntity<>("admin here", HttpStatus.OK);
     }
 
 

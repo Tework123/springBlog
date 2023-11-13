@@ -27,6 +27,14 @@ dependencies {
 //  WARNING lombok variable userRepository not initialized in the default constructor without this:
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
 
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.3'
+// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.3'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '3.1.5', ext: 'pom'
+
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

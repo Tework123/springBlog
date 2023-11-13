@@ -21,9 +21,13 @@ public class User implements UserDetails {
     @Size(min = 3, max = 30, message = "name length should 3 to 30")
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = false)
     @Size(min = 3, max = 50, message = "email length should 3 to 50")
     private String email;
+
+    @Column(unique = true)
+    @Size(min = 3, max = 50, message = "username length should 3 to 50")
+    private String username;
 
     @Column(length = 1000)
     @Size(min = 4, max = 1000, message = "password length should 4 to 50")
@@ -89,7 +93,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
