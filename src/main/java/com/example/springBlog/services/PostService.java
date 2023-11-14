@@ -1,6 +1,7 @@
 package com.example.springBlog.services;
 
 
+import com.example.springBlog.dtos.post.PostCreateDto;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.repositories.PostRepository;
@@ -22,7 +23,10 @@ public class PostService {
         return postRepository.findAllByOrderByDateCreateDesc();
     }
 
-    public Post createPost(User currentUser, Post post) {
+    public Post createPost(User currentUser, PostCreateDto postCreateDto) {
+        Post post = new Post();
+        post.setName(postCreateDto.getName());
+        post.setText(postCreateDto.getText());
         post.setUser(currentUser);
 //        Photo photo1 = photoService.toImageEntity(file1, currentUser);
 //        Photo photo2 = photoService.toImageEntity(file2, currentUser);

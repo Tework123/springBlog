@@ -1,6 +1,11 @@
 package com.example.springBlog.entities;
 
+import com.example.springBlog.dtos.post.Views;
 import com.example.springBlog.entities.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,6 +18,8 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User implements UserDetails {
 
     @Id
@@ -41,6 +48,7 @@ public class User implements UserDetails {
 //
 //    //  когда удаляем юзера, достаются все его посты, в поле постов user = null,
 ////  save метод не вызываем, потому что persist здесь это делает за нас
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
     //

@@ -1,4 +1,4 @@
-package com.example.springBlog.controllers;
+package com.example.springBlog.controllers.error;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class ErrorController {
+public class JwtErrorController {
 
     @GetMapping("/error/forbidden")
     public ResponseEntity<?> forbidden() {

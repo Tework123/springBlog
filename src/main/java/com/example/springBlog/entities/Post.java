@@ -1,8 +1,13 @@
 package com.example.springBlog.entities;
 
 
+import com.example.springBlog.dtos.post.Views;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -15,11 +20,13 @@ import java.util.Set;
 @Entity
 @Table(name = "posts")
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 3, max = 30, message = "3 to 30")
@@ -44,7 +51,7 @@ public class Post {
 //        photos.add(photo);
 //    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private User user;
 
