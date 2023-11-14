@@ -5,11 +5,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class PostCreateDto {
+public class PostEditDto {
 
-    @NotNull
     private String name;
 
-    @NotNull
     private String text;
 }

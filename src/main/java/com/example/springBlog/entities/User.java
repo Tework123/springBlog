@@ -18,8 +18,6 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class User implements UserDetails {
 
     @Id
@@ -48,7 +46,7 @@ public class User implements UserDetails {
 //
 //    //  когда удаляем юзера, достаются все его посты, в поле постов user = null,
 ////  save метод не вызываем, потому что persist здесь это делает за нас
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
     //

@@ -1,12 +1,15 @@
 package com.example.springBlog.services;
 
 
+import com.example.springBlog.exceptions.customExceptions.NoOwnerException;
 import com.example.springBlog.dtos.post.PostCreateDto;
+import com.example.springBlog.dtos.post.PostEditDto;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.repositories.PostRepository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -34,6 +37,21 @@ public class PostService {
 //        post.addPhotoToPost(photo2);
         return postRepository.save(post);
 
+    }
+
+    public void editPost(Long id, PostEditDto postEditDto, User currentUser) {
+
+        Post oldPost = postRepository.findById(id).orElse(null);
+        if (oldPost.getUser().getId() != currentUser.getId()) {
+            throw new NoOwnerException(HttpStatus.FORBIDDEN, "You don't owner this post");
+        }
+        if (postEditDto.getName() != null) {
+            oldPost.setName(postEditDto.getName());
+        }
+        if (postEditDto.getText() != null) {
+            oldPost.setText(postEditDto.getText());
+        }
+        postRepository.save(oldPost);
     }
 
 }

@@ -60,6 +60,7 @@ public class WebSecurityConfig {
                                 "/photos/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/post").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/post/{id}").authenticated()
                         .requestMatchers("/admin").hasRole("USER")
                         .anyRequest().permitAll()
 

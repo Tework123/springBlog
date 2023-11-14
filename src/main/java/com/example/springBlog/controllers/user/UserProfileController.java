@@ -2,7 +2,6 @@ package com.example.springBlog.controllers.user;
 
 import com.example.springBlog.dtos.UserDto;
 import com.example.springBlog.entities.User;
-import com.example.springBlog.exceptions.ExampleExeption;
 import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.UserService;
 import lombok.AllArgsConstructor;
@@ -21,9 +20,8 @@ public class UserProfileController {
     private final UserService userService;
 
 
-
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Long id) throws ExampleExeption {
+    public UserDto getUser(@PathVariable Long id) {
         System.out.println(userRepository.findById(id));
         User user = userRepository.findById(id).orElse(null);
 
@@ -32,7 +30,7 @@ public class UserProfileController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity geleteUser(@PathVariable Long id) throws ExampleExeption {
+    public ResponseEntity geleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
 
         return ResponseEntity.ok("User delete success");

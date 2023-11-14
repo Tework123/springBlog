@@ -1,4 +1,4 @@
-package com.example.springBlog.controllers.error;
+package com.example.springBlog.exceptions;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
