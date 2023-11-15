@@ -47,27 +47,26 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
-//    //    мне кажется, здесь это не нужно, нет смысла класть куда то объект follower
-////    нужно юзеров класть, но не можем тогда ссылаться на userFollower в таблице Follow
-//    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
-//            fetch = FetchType.LAZY, mappedBy = "userFollower")
-//    @EqualsAndHashCode.Exclude
-//    private Set<Follower> follows;
-//
-//
-//    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
-//            fetch = FetchType.LAZY, mappedBy = "userAuthor")
-//    @EqualsAndHashCode.Exclude
-//    private Set<Follower> authors;
-//
-//
+
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
+            fetch = FetchType.LAZY, mappedBy = "userFollower")
+    @EqualsAndHashCode.Exclude
+    private Set<Follower> follows;
+
+
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
+            fetch = FetchType.LAZY, mappedBy = "userAuthor")
+    @EqualsAndHashCode.Exclude
+    private Set<Follower> authors;
+
+
     private LocalDate dateJoined;
 
     @PrePersist
     private void init() {
         dateJoined = LocalDate.now();
     }
-//
+
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

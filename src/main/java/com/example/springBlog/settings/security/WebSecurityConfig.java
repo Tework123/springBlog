@@ -55,12 +55,15 @@ public class WebSecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(
+                        .requestMatchers(HttpMethod.GET,
                                 "/error/**",
-                                "/photos/**"
+                                "/photos/**",
+                                "user//{id}/authors",
+                                "user/{id}/followers"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/post",
-                                "post/{id}/status").authenticated()
+                                "post/{id}/status",
+                                "user/follow/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/post/liked_posts"
                         ).authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/post/{id}").authenticated()

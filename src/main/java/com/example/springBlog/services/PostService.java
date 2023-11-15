@@ -3,11 +3,12 @@ package com.example.springBlog.services;
 
 import com.example.springBlog.entities.UserPostStatus;
 import com.example.springBlog.entities.enums.PostStatus;
-import com.example.springBlog.exceptions.customExceptions.NoOwnerException;
+import com.example.springBlog.exceptions.customExceptions.CustomException;
 import com.example.springBlog.dtos.post.PostCreateDto;
 import com.example.springBlog.dtos.post.PostEditDto;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
+//import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
 import com.example.springBlog.repositories.PostRepository;
 
 import com.example.springBlog.repositories.UserPostStatusRepository;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -38,19 +38,15 @@ public class PostService {
         post.setName(postCreateDto.getName());
         post.setText(postCreateDto.getText());
         post.setUser(currentUser);
-//        Photo photo1 = photoService.toImageEntity(file1, currentUser);
-//        Photo photo2 = photoService.toImageEntity(file2, currentUser);
-//        post.addPhotoToPost(photo1);
-//        post.addPhotoToPost(photo2);
         return postRepository.save(post);
 
     }
 
     public void editPost(Long id, PostEditDto postEditDto, User currentUser) {
-        Post oldPost = postRepository.findById(id).orElse(null);
-
+        Post oldPost = postRepository.findById(id).orElseThrow(()
+                -> new CustomException(HttpStatus.NOT_FOUND, "Post not found"));
         if (oldPost.getUser() != currentUser) {
-            throw new NoOwnerException(HttpStatus.FORBIDDEN, "You don't owner this post");
+            throw new CustomException(HttpStatus.FORBIDDEN, "You don't owner this post");
         }
         if (postEditDto.getName() != null) {
             oldPost.setName(postEditDto.getName());
@@ -66,7 +62,7 @@ public class PostService {
                 -> new EntityNotFoundException("Post not found"));
 
         if (post.getUser() != currentUser) {
-            throw new NoOwnerException(HttpStatus.FORBIDDEN, "You don't owner this post");
+            throw new CustomException(HttpStatus.FORBIDDEN, "You don't owner this post");
         }
         postRepository.deleteById(id);
     }

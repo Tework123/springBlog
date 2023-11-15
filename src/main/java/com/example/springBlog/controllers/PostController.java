@@ -5,7 +5,8 @@ import com.example.springBlog.dtos.post.*;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.entities.enums.PostStatus;
-import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
+//import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
+import com.example.springBlog.exceptions.customExceptions.CustomException;
 import com.example.springBlog.repositories.PostRepository;
 import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.PostService;
@@ -28,6 +29,7 @@ import java.util.Set;
 @RequestMapping("/post")
 @AllArgsConstructor
 public class PostController {
+
     private PostService postService;
     private UserRepository userRepository;
     private PostRepository postRepository;
@@ -41,17 +43,16 @@ public class PostController {
     @GetMapping("/{id}")
     public PostGetDto getPost(@PathVariable Long id) {
         Post post = postRepository.findById(id).orElseThrow(()
-                -> new NotFoundObjectException(HttpStatus.NOT_FOUND, "Post not found"));
+                -> new CustomException(HttpStatus.NOT_FOUND, "Post not found"));
         return PostGetDto.toDto(post);
     }
 
     @PostMapping("")
-    public ResponseEntity<String> createPost(@Validated @RequestBody PostCreateDto postCreateDto,
+    public ResponseEntity<String> createPost(@Validated @RequestBody
+                                             PostCreateDto postCreateDto,
                                              Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
-
         Post savedPost = postService.createPost(currentUser, postCreateDto);
-//        postService.savePhotos(file1, file2, savedPost, currentUser);
         return ResponseEntity.ok("Post create " + savedPost.getName());
 
     }
@@ -62,7 +63,6 @@ public class PostController {
                                            @RequestBody PostEditDto postEditDto,
                                            Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
-
         postService.editPost(id, postEditDto, currentUser);
         return ResponseEntity.ok("Post edit");
     }
