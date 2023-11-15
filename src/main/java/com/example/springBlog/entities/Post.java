@@ -1,20 +1,14 @@
 package com.example.springBlog.entities;
 
 
-import com.example.springBlog.dtos.post.Views;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.example.springBlog.entities.enums.PostStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -49,15 +43,15 @@ public class Post {
 //        photos.add(photo);
 //    }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
+            fetch = FetchType.EAGER, mappedBy = "post")
+    @EqualsAndHashCode.Exclude
+    Set<UserPostStatus> postStatus;
 
-//    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
-//            fetch = FetchType.EAGER, mappedBy = "post")
-//    @EqualsAndHashCode.Exclude
-//    Set<UserPost> postStatus;
 
     public Integer likes = 0;
 

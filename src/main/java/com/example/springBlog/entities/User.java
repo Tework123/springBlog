@@ -1,14 +1,11 @@
 package com.example.springBlog.entities;
 
-import com.example.springBlog.dtos.post.Views;
+import com.example.springBlog.entities.enums.PostStatus;
 import com.example.springBlog.entities.enums.Role;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -47,9 +44,9 @@ public class User implements UserDetails {
 //    //  когда удаляем юзера, достаются все его посты, в поле постов user = null,
 ////  save метод не вызываем, потому что persist здесь это делает за нас
 //    @JsonIgnore
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
-    //
+
 //    //    мне кажется, здесь это не нужно, нет смысла класть куда то объект follower
 ////    нужно юзеров класть, но не можем тогда ссылаться на userFollower в таблице Follow
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
@@ -76,12 +73,12 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
-//
-//
-//    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
-//            fetch = FetchType.EAGER, mappedBy = "user")
-//    @EqualsAndHashCode.Exclude
-//    Set<UserPost> postStatus;
+
+
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true,
+            fetch = FetchType.EAGER, mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    Set<UserPostStatus> postStatus = new HashSet<>();
 //
 //    public boolean isAdmin() {
 //        return roles.contains(Role.ROLE_ADMIN);
@@ -126,5 +123,18 @@ public class User implements UserDetails {
                 ", active=" + active +
                 ", roles=" + roles +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

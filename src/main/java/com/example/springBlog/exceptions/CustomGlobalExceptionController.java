@@ -3,15 +3,15 @@ package com.example.springBlog.exceptions;
 
 import com.example.springBlog.exceptions.customExceptions.CustomException;
 import com.example.springBlog.exceptions.customExceptions.NoOwnerException;
+import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,15 +37,35 @@ public class CustomGlobalExceptionController {
         return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
     }
 
-    //    сделать так, чтобы все ошибки обрабатывались как сверху, а то тут не очень,
-//    но статус тоже
-//    далее делаем дальше проект, раскапывает dto, надо их как то красиво имплементировать
+//    хз почему не работает
+    @ExceptionHandler(NotFoundObjectException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ResponseBody
+    public ResponseEntity<?> handleNotFoundObjectException(NotFoundObjectException ex) {
+        return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
+    }
+
     @ExceptionHandler(CustomException.class)
     @ResponseBody
     public ResponseEntity<?> handleException(CustomException ex) {
 
         return new ResponseEntity<>(ex.getErrorMessage(), ex.getHttpStatus());
     }
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> Ex(
+//            Exception ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        System.out.println(ex);
+//        System.out.println(ex.getMessage());
+//        System.out.println(ex.fillInStackTrace());
+//        System.out.println(ex.getCause());
+//        System.out.println(ex.getLocalizedMessage());
+//        System.out.println(Arrays.toString(ex.getSuppressed()));
+//
+//
+//        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+//    }
 
 
 }

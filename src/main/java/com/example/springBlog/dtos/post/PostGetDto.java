@@ -6,6 +6,8 @@ import com.example.springBlog.entities.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class PostGetDto {
@@ -27,6 +29,13 @@ public class PostGetDto {
         postGetDto.setUser(userGetDto);
 
         return postGetDto;
+    }
+
+    public static List<PostGetDto> toListDto(List<Post> postsFromDb) {
+        List<PostGetDto> posts = postsFromDb.stream().map(PostGetDto::toDto)
+                .collect(Collectors.toList());
+        return posts;
+
     }
 
 }

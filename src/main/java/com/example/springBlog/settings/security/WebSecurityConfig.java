@@ -59,8 +59,12 @@ public class WebSecurityConfig {
                                 "/error/**",
                                 "/photos/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/post").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/post",
+                                "post/{id}/status").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/post/liked_posts"
+                        ).authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/post/{id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/post/{id}").authenticated()
                         .requestMatchers("/admin").hasRole("USER")
                         .anyRequest().permitAll()
 
