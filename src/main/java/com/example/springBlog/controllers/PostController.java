@@ -4,7 +4,6 @@ import com.example.springBlog.dtos.post.*;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.entities.enums.PostStatus;
-//import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
 import com.example.springBlog.exceptions.customExceptions.CustomException;
 import com.example.springBlog.repositories.PostRepository;
 import com.example.springBlog.repositories.UserRepository;

@@ -1,8 +1,6 @@
 package com.example.springBlog.dtos.user;
 
-import com.example.springBlog.dtos.post.PostGetDto;
 import com.example.springBlog.entities.Follower;
-import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.enums.FollowStatus;
 import lombok.Data;
 

@@ -1,8 +1,5 @@
 package com.example.springBlog.dtos.admin;
 
-import com.example.springBlog.dtos.post.PostGetDto;
-import com.example.springBlog.dtos.user.UserProfilePageDto;
-import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.entities.enums.Role;
 import lombok.Data;

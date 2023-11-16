@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -15,6 +13,9 @@ public class UserPostStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private PostStatus postStatus;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -26,8 +27,6 @@ public class UserPostStatus {
     @EqualsAndHashCode.Exclude
     private Post post;
 
-    @Enumerated(EnumType.STRING)
-    private PostStatus postStatus;
 
 }
 

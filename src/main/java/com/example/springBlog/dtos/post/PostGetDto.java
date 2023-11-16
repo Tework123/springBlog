@@ -2,7 +2,6 @@ package com.example.springBlog.dtos.post;
 
 import com.example.springBlog.dtos.user.UserGetDto;
 import com.example.springBlog.entities.Post;
-import com.example.springBlog.entities.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;

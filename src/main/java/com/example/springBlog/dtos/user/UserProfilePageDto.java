@@ -1,7 +1,6 @@
 package com.example.springBlog.dtos.user;
 
 import com.example.springBlog.dtos.post.PostGetDto;
-import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
 import lombok.Data;
 

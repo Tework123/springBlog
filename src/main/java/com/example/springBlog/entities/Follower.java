@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "followers")
@@ -17,6 +15,16 @@ public class Follower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    private LocalDate dateFollow;
+
+    @PrePersist
+    private void init() {
+        dateFollow = LocalDate.now();
+    }
+
+    @Enumerated(EnumType.STRING)
+    private FollowStatus statusFollow;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_follower")
@@ -27,19 +35,5 @@ public class Follower {
     @JoinColumn(name = "user_author")
     @EqualsAndHashCode.Exclude
     User userAuthor;
-
-    private LocalDate dateFollow;
-
-    @PrePersist
-    private void init() {
-        dateFollow = LocalDate.now();
-    }
-
-
-//    @ElementCollection(targetClass = FollowStatus.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "status_follow", joinColumns = @JoinColumn(name = "follower_id"))
-    @Enumerated(EnumType.STRING)
-    private FollowStatus statusFollow;
-
 
 }

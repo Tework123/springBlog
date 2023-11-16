@@ -32,6 +32,10 @@ public class Post {
         dateCreate = LocalDateTime.now();
     }
 
+    public Integer likes = 0;
+
+    public Integer dislikes = 0;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -41,11 +45,6 @@ public class Post {
             fetch = FetchType.EAGER, mappedBy = "post")
     @EqualsAndHashCode.Exclude
     Set<UserPostStatus> postStatus;
-
-
-    public Integer likes = 0;
-
-    public Integer dislikes = 0;
 
 
     @Override
