@@ -53,24 +53,25 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.GET,
-                                "/error/**",
-                                "/photos/**",
+                                "error/**",
+                                "photos/**",
                                 "user/{id}",
                                 "user//{id}/authors",
-                                "user/{id}/followers"
+                                "user/{id}/followers",
+                                "post"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/post",
+                        .requestMatchers(HttpMethod.POST, "post",
                                 "post/{id}/status",
                                 "user/follow/{id}"
                         ).authenticated()
-                        .requestMatchers(HttpMethod.GET, "/post/liked_posts"
+                        .requestMatchers(HttpMethod.GET, "post/liked_posts"
                         ).authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/post/{id}",
+                        .requestMatchers(HttpMethod.PATCH, "post/{id}",
                                 "user/edit").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/post/{id}",
-                                "/user/{id}").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "post/{id}",
+                                "user/{id}").authenticated()
+                        .requestMatchers("admin/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 );
 
         http.exceptionHandling((exception) -> exception
