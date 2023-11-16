@@ -1,6 +1,7 @@
 package com.example.springBlog.controllers.user;
 
 
+import com.example.springBlog.dtos.ResponseDto;
 import com.example.springBlog.dtos.user.SignUpDto;
 import com.example.springBlog.services.UserService;
 import com.example.springBlog.settings.security.jwt.JwtRequest;
@@ -54,7 +55,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Validated @RequestBody SignUpDto signUpDto) {
         userService.createUser(signUpDto);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok(ResponseDto.toDto("User registered successfully"));
     }
 
 

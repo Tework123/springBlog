@@ -1,5 +1,6 @@
 package com.example.springBlog.controllers;
 
+import com.example.springBlog.dtos.ResponseDto;
 import com.example.springBlog.dtos.admin.AdminGetUsersDto;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.entities.enums.Role;
@@ -27,15 +28,15 @@ public class AdminController {
     }
 
     @PatchMapping("/user/{id}/activate")
-    public ResponseEntity<String> userActivate(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto> userActivate(@PathVariable("id") Long id) {
         boolean isActive = adminService.userActivate(id);
-        return ResponseEntity.ok("User is: " + isActive);
+        return ResponseEntity.ok(ResponseDto.toDto("User is: " + isActive));
     }
 
     @PatchMapping("/user/{id}/change_role")
-    public ResponseEntity<String> userChangeRole(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto> userChangeRole(@PathVariable("id") Long id) {
         Set<Role> role = adminService.userChangeRole(id);
-        return ResponseEntity.ok("Role user: " + role);
+        return ResponseEntity.ok(ResponseDto.toDto("Role user: " + role));
     }
 }
 

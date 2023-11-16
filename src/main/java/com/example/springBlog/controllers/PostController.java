@@ -1,5 +1,6 @@
 package com.example.springBlog.controllers;
 
+import com.example.springBlog.dtos.ResponseDto;
 import com.example.springBlog.dtos.post.*;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
@@ -40,40 +41,40 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> createPost(@Validated @RequestBody
-                                             PostCreateDto postCreateDto,
-                                             Authentication auth) {
+    public ResponseEntity<ResponseDto> createPost(@Validated @RequestBody
+                                                  PostCreateDto postCreateDto,
+                                                  Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         Post savedPost = postService.createPost(currentUser, postCreateDto);
-        return ResponseEntity.ok("Post create " + savedPost.getName());
+        return ResponseEntity.ok(ResponseDto.toDto("Post create " + savedPost.getName()));
 
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> editPost(@PathVariable("id") Long id,
-                                           @Validated
-                                           @RequestBody PostEditDto postEditDto,
-                                           Authentication auth) {
+    public ResponseEntity<ResponseDto> editPost(@PathVariable("id") Long id,
+                                                @Validated
+                                                @RequestBody PostEditDto postEditDto,
+                                                Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         postService.editPost(id, postEditDto, currentUser);
-        return ResponseEntity.ok("Post edit");
+        return ResponseEntity.ok(ResponseDto.toDto("Post edit"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") Long id,
-                                             Authentication auth) {
+    public ResponseEntity<ResponseDto> deletePost(@PathVariable("id") Long id,
+                                                  Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         postService.deletePost(id, currentUser);
-        return ResponseEntity.ok("Post delete");
+        return ResponseEntity.ok(ResponseDto.toDto("Post delete"));
     }
 
     //    POST STATUS (LIKES, DISLIKES)
     @PostMapping("/{id}/status")
-    public ResponseEntity<String> setPostStatus(@PathVariable("id") Long id,
-                                                Authentication auth) {
+    public ResponseEntity<ResponseDto> setPostStatus(@PathVariable("id") Long id,
+                                                     Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         PostStatus postStatus = postService.setPostStatus(id, currentUser);
-        return ResponseEntity.ok("Post status: " + postStatus);
+        return ResponseEntity.ok(ResponseDto.toDto("Post status: " + postStatus));
 
     }
 

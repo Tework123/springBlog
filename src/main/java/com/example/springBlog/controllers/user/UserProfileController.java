@@ -1,5 +1,6 @@
 package com.example.springBlog.controllers.user;
 
+import com.example.springBlog.dtos.ResponseDto;
 import com.example.springBlog.dtos.user.FollowerDto;
 import com.example.springBlog.dtos.user.UserEditDto;
 import com.example.springBlog.dtos.user.UserProfilePageDto;
@@ -10,6 +11,7 @@ import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -35,35 +37,36 @@ public class UserProfileController {
     }
 
     @PatchMapping("/edit")
-    public ResponseEntity<String> editUser(@Validated @RequestBody
-                                           UserEditDto userEditDto,
-                                           Authentication auth) {
+    public ResponseEntity<ResponseDto> editUser(@Validated @RequestBody
+                                                UserEditDto userEditDto,
+                                                Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         userService.editUser(userEditDto, currentUser);
-        return ResponseEntity.ok("User edit success");
+        return ResponseEntity.ok(ResponseDto.toDto("User edit success"));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id,
-                                             Authentication auth) {
+    public ResponseEntity<ResponseDto> deleteUser(@PathVariable Long id,
+                                                  Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
 
         userService.deleteUser(id, currentUser);
-        return ResponseEntity.ok("User delete success");
+        return ResponseEntity.ok(ResponseDto.toDto("User delete success"));
     }
 
-    @PostMapping("/follow/{id}")
-    public ResponseEntity<String> followToUser(@PathVariable("id") Long id,
-                                               Authentication auth) {
+    @PostMapping(path = "/follow/{id}")
+    public ResponseEntity<ResponseDto> followToUser(@PathVariable("id") Long id,
+                                                    Authentication auth) {
         User currentUser = userRepository.findByUsername(auth.getName());
         String response = userService.follow(id, currentUser);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseDto.toDto(response));
     }
 
     @GetMapping("/{id}/authors")
     public String getAuthors(@PathVariable("id") Long id) {
         List<Follower> authors = userService.getAuthors(id);
+//       don't work yet
         return "user/authorsTemplate";
     }
 
