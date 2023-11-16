@@ -28,9 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private UserDetailsService jwtUserDetailsService;
-
     private JwtRequestFilter jwtRequestFilter;
 
 
@@ -71,11 +69,10 @@ public class WebSecurityConfig {
                                 "user/edit").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/post/{id}",
                                 "/user/{id}").authenticated()
-                        .requestMatchers("/admin").hasRole("USER")
-                        .anyRequest().permitAll()
-
-
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 );
+
         http.exceptionHandling((exception) -> exception
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedPage("/error/forbidden"));

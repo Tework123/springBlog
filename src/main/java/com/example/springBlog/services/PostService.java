@@ -8,7 +8,6 @@ import com.example.springBlog.dtos.post.PostCreateDto;
 import com.example.springBlog.dtos.post.PostEditDto;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
-//import com.example.springBlog.exceptions.customExceptions.NotFoundObjectException;
 import com.example.springBlog.repositories.PostRepository;
 
 import com.example.springBlog.repositories.UserPostStatusRepository;
