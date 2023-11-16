@@ -1,6 +1,5 @@
 package com.example.springBlog.controllers;
 
-import com.example.springBlog.dtos.UserDto;
 import com.example.springBlog.dtos.post.*;
 import com.example.springBlog.entities.Post;
 import com.example.springBlog.entities.User;
@@ -10,11 +9,7 @@ import com.example.springBlog.exceptions.customExceptions.CustomException;
 import com.example.springBlog.repositories.PostRepository;
 import com.example.springBlog.repositories.UserRepository;
 import com.example.springBlog.services.PostService;
-import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,8 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/post")

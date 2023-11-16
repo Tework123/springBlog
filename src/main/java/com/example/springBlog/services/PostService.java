@@ -125,6 +125,14 @@ public class PostService {
 
         return likedPosts;
     }
+
+
+    public void getUserPosts(User user) {
+        List<Post> posts = postRepository.findByUser(user);
+        for (Post post : posts) {
+            post.setUser(null);
+        }
+    }
 }
 
 

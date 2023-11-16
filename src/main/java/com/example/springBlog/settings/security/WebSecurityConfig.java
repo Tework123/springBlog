@@ -1,7 +1,6 @@
 package com.example.springBlog.settings.security;
 
 
-import com.example.springBlog.entities.enums.Role;
 import com.example.springBlog.settings.security.jwt.JwtAuthenticationEntryPoint;
 import com.example.springBlog.settings.security.jwt.JwtRequestFilter;
 import lombok.AllArgsConstructor;
@@ -58,16 +57,20 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET,
                                 "/error/**",
                                 "/photos/**",
+                                "user/{id}",
                                 "user//{id}/authors",
                                 "user/{id}/followers"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/post",
                                 "post/{id}/status",
-                                "user/follow/{id}").authenticated()
+                                "user/follow/{id}"
+                        ).authenticated()
                         .requestMatchers(HttpMethod.GET, "/post/liked_posts"
                         ).authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/post/{id}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/post/{id}").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/post/{id}",
+                                "user/edit").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/post/{id}",
+                                "/user/{id}").authenticated()
                         .requestMatchers("/admin").hasRole("USER")
                         .anyRequest().permitAll()
 

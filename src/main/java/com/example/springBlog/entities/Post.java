@@ -1,14 +1,12 @@
 package com.example.springBlog.entities;
 
 
-import com.example.springBlog.entities.enums.PostStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,14 +32,6 @@ public class Post {
         dateCreate = LocalDateTime.now();
     }
 
-
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "post")
-//    private List<Photo> photos = new ArrayList<>();
-
-//    public void addPhotoToPost(Photo photo) {
-//        photo.setPost(this);
-//        photos.add(photo);
-//    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

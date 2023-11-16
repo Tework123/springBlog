@@ -1,6 +1,5 @@
 package com.example.springBlog.entities;
 
-import com.example.springBlog.entities.enums.PostStatus;
 import com.example.springBlog.entities.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -35,15 +34,6 @@ public class User implements UserDetails {
 
     private boolean active;
 
-    //    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "photo_id")
-//    @EqualsAndHashCode.Exclude
-//    private Photo avatar;
-//
-//
-//    //  когда удаляем юзера, достаются все его посты, в поле постов user = null,
-////  save метод не вызываем, потому что persist здесь это делает за нас
-//    @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
@@ -58,7 +48,6 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY, mappedBy = "userAuthor")
     @EqualsAndHashCode.Exclude
     private Set<Follower> authors;
-
 
     private LocalDate dateJoined;
 

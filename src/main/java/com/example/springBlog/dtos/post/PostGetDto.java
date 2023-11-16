@@ -15,6 +15,8 @@ public class PostGetDto {
     private String text;
     private LocalDateTime dateCreate;
     private UserGetDto user;
+    private Integer likes;
+    public Integer dislikes;
 
 
     public static PostGetDto toDto(Post post) {
@@ -22,11 +24,15 @@ public class PostGetDto {
         postGetDto.setName(post.getName());
         postGetDto.setText(post.getText());
         postGetDto.setDateCreate(post.getDateCreate());
+        postGetDto.setLikes(post.getLikes());
+        postGetDto.setDislikes(post.getDislikes());
 
-        UserGetDto userGetDto = new UserGetDto();
-        userGetDto.setId(post.getUser().getId());
-        userGetDto.setUsername(post.getUser().getUsername());
-        postGetDto.setUser(userGetDto);
+        if (post.getUser() != null) {
+            UserGetDto userGetDto = new UserGetDto();
+            userGetDto.setId(post.getUser().getId());
+            userGetDto.setUsername(post.getUser().getUsername());
+            postGetDto.setUser(userGetDto);
+        }
 
         return postGetDto;
     }

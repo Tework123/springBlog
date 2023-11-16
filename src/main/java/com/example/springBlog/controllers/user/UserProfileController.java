@@ -1,7 +1,8 @@
 package com.example.springBlog.controllers.user;
 
-import com.example.springBlog.dtos.UserDto;
 import com.example.springBlog.dtos.user.FollowerDto;
+import com.example.springBlog.dtos.user.UserEditDto;
+import com.example.springBlog.dtos.user.UserProfilePageDto;
 import com.example.springBlog.entities.Follower;
 import com.example.springBlog.entities.User;
 import com.example.springBlog.exceptions.customExceptions.CustomException;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,17 +28,28 @@ public class UserProfileController {
 
 
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Long id) {
-        System.out.println(userRepository.findById(id));
+    public UserProfilePageDto getUser(@PathVariable Long id) {
         User user = userRepository.findById(id).orElseThrow(()
                 -> new CustomException(HttpStatus.NOT_FOUND, "User not found"));
-        return UserDto.toDto(user);
+        return UserProfilePageDto.toDto(user);
+    }
+
+    @PatchMapping("/edit")
+    public ResponseEntity<String> editUser(@Validated @RequestBody
+                                           UserEditDto userEditDto,
+                                           Authentication auth) {
+        User currentUser = userRepository.findByUsername(auth.getName());
+        userService.editUser(userEditDto, currentUser);
+        return ResponseEntity.ok("User edit success");
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+    public ResponseEntity<String> deleteUser(@PathVariable Long id,
+                                             Authentication auth) {
+        User currentUser = userRepository.findByUsername(auth.getName());
+
+        userService.deleteUser(id, currentUser);
         return ResponseEntity.ok("User delete success");
     }
 
