@@ -1,6 +1,7 @@
 package com.example.springBlog.exceptions;
 
 
+import com.example.springBlog.dtos.ResponseDto;
 import com.example.springBlog.exceptions.customExceptions.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,7 @@ public class CustomGlobalExceptionController {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleException(CustomException ex) {
-
-        return new ResponseEntity<>(ex.getErrorMessage(), ex.getHttpStatus());
+        return new ResponseEntity<>(ResponseDto.toDto(ex.getMessage()), ex.getHttpStatus());
     }
 
 

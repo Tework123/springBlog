@@ -47,7 +47,16 @@ public class PostController {
         User currentUser = userRepository.findByUsername(auth.getName());
         Post savedPost = postService.createPost(currentUser, postCreateDto);
         return ResponseEntity.ok(ResponseDto.toDto("Post create " + savedPost.getName()));
+    }
 
+    @PostMapping("/pp")
+    public ResponseEntity<ResponseDto> createPost2(@Validated @RequestBody
+                                                  PostCreateDto postCreateDto
+                                                  ) {
+//        User currentUser = userRepository.findByUsername(auth.getName());
+//        Post savedPost = postService.createPost(currentUser, postCreateDto);
+        System.out.println(postCreateDto);
+        return ResponseEntity.ok(ResponseDto.toDto("Post create " + "savedPost.getName()"));
     }
 
     @PatchMapping("/{id}")

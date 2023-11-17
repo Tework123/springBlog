@@ -29,7 +29,7 @@ public class UserService {
 
     public void createUser(SignUpDto signUpDto) {
         if (userRepository.existsByUsername(signUpDto.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exist");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "User already exist");
         }
 
         User user = new User();
