@@ -58,7 +58,8 @@ public class WebSecurityConfig {
                                 "/user/{id}",
                                 "/user//{id}/authors",
                                 "/user/{id}/followers",
-                                "/post"
+                                "/post",
+                                "/post/{id}"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/signup",

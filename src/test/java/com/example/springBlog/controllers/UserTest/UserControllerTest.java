@@ -1,8 +1,8 @@
-package com.example.springBlog.controllers;
+package com.example.springBlog.controllers.UserTest;
 
 
+import com.example.springBlog.controllers.UserProfileTest.UserTestDto;
 import com.example.springBlog.dtos.post.PostCreateDto;
-import com.example.springBlog.dtos.user.SignUpDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
@@ -27,37 +25,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/applicationTest.properties")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    public String UserTestDto() throws JsonProcessingException {
-        SignUpDto signUpDto = new SignUpDto();
-        signUpDto.setUsername("user1");
-        signUpDto.setPassword("1234567");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(signUpDto);
-        return requestJson;
-    }
-
-    // не чистит базу, аннотация не работает
-//    вручную что ли делать
+    @Sql(value = {"/clearDb.sql"})
     @Test
-    public void test1() throws Exception {
+    public void signupTestSuccess() throws Exception {
 
         this.mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .characterEncoding("UTF-8")
-                        .content(UserTestDto()))
+                        .content(UserTestDto.signUpDto()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", is("Post create savedPost.getName()")));
+                .andExpect(jsonPath("$.message", is("User registered successfully")));
     }
+
+    @Test
+    public void signinTestSuccess() throws Exception {
+
+        this.mockMvc.perform(post("/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("UTF-8")
+                        .content(UserTestDto.signUpDto()))
+
+                .andDo(print())
+                .andExpect(status().isOk());
+
+//        отсюда забираем токен, когда старый истечет
+//                .andExpect(jsonPath("$.token", is("123")));
+
+    }
+
 }
 
 
