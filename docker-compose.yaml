@@ -1,6 +1,12 @@
 version: '3.8'
+
+# заметки по докеру для джавы:
+# не пересобирает dockerfile при docker-compose up -d, в отличии от питона
+# gradle выдает ошибку hibernate при запуске тестов, поэтому пока их пропускаем при сборке
+
 services:
   backend:
+    container_name: backend
     image: client:0.0.1
     build:
       context: .
@@ -9,22 +15,20 @@ services:
       - "8081:8081"
     depends_on:
       - db
-#    environment:
-#      - SERVER_PORT= 8081
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/books_db
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/springBlog
   db:
+    container_name: db
     image: postgres:16
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-    ports:
-      - "15432:5432"
+      - POSTGRES_DB=springBlog
+      - POSTGRES_USER=postgres
+      #      это не мой пароль)
+      - POSTGRES_PASSWORD=ksflkOkas23fl9saflKdl349sLfsk1
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
 
-
-
 volumes:
   db-data:
-  pgadmin-data:
