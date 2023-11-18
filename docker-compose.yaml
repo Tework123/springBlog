@@ -3,6 +3,7 @@ version: '3.8'
 # заметки по докеру для джавы:
 # не пересобирает dockerfile при docker-compose up -d, в отличии от питона
 # gradle выдает ошибку hibernate при запуске тестов, поэтому пока их пропускаем при сборке
+# end of my programming path on 2023, i am life forever, capitalism is war
 
 services:
   backend:
